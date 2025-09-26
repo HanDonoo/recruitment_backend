@@ -47,3 +47,25 @@ class ApplicationAssessment(Base):
     data_json = Column(MySQLJSON, nullable=False)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+class JobAssessment(Base):
+    __tablename__ = "job_assessment"
+
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    applicant_id = Column(BigInteger, nullable=False)
+    job_id = Column(BigInteger, nullable=False)
+    version = Column(String(40), nullable=False)
+    data_json = Column(MySQLJSON, nullable=False)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+class Application(Base):
+    __tablename__ = "application"
+
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    applicant_id = Column(BigInteger, nullable=False)
+    job_id = Column(BigInteger, nullable=False)
+    job_assessment_id = Column(BigInteger, nullable=True)
+    status = Column(String(50), nullable=False, default="pending")
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())

@@ -6,6 +6,7 @@ from app.services.matching import calc_match_score
 import pdfplumber
 import docx
 import requests
+import datetime
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])
 
@@ -151,7 +152,21 @@ async def assess_cv(
                 "建议Mingle Zhang在面试中强调自己的学习意愿和转型潜力，展示出自己对AI领域的兴趣和热情"
             ]
         };
-        # 假设 AI 返回的 data 是评估结果，你可以封装成：
+
+        version = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
+
+        # 存到 job_assessment 表
+        new_assessment = models.JobAssessment(
+            applicant_id=1,
+            job_id=job_id,
+            version=version,
+            data_json=data
+        )
+        db.add(new_assessment)
+        db.commit()
+        db.refresh(new_assessment)
+
+        # return {"success": True, "data": data, "assessment_id": new_assessment.id}
         return {"success": True, "data": data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"AI assessment failed: {e}")

@@ -41,10 +41,24 @@ class ApplicantCreate(BaseModel):
 class ApplicantOut(ApplicantCreate, ORMBase):
     id: int
 
-class AssessmentCreate(BaseModel):
-    application_id: int
-    version: str = Field(..., max_length=40)
-    data_json: Dict[str, Any]
+class ApplicationCreate(BaseModel):
+    applicant_id: int
+    job_id: int
+    job_assessment_id: Optional[int] = None
+    status: Optional[str] = Field(default="pending", max_length=50)
 
-class AssessmentOut(AssessmentCreate, ORMBase):
+class ApplicationOut(ApplicationCreate, ORMBase):
     id: int
+    created_at: Optional[str]
+    updated_at: Optional[str]
+
+class JobAssessmentCreate(BaseModel):
+    applicant_id: int
+    job_id: int
+    version: str = Field(..., max_length=40)
+    data_json: dict
+
+class JobAssessmentOut(JobAssessmentCreate, ORMBase):
+    id: int
+    created_at: Optional[str]
+    updated_at: Optional[str]
