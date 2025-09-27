@@ -1,5 +1,6 @@
 from typing import Optional, Any, Dict
 from pydantic import BaseModel, Field, ConfigDict
+from typing import List
 
 # 公共基类：等同于 v1 的 orm_mode=True
 class ORMBase(BaseModel):
@@ -44,13 +45,14 @@ class ApplicantOut(ApplicantCreate, ORMBase):
 class ApplicationCreate(BaseModel):
     applicant_id: int
     job_id: int
-    job_assessment_id: Optional[int] = None
     status: Optional[str] = Field(default="pending", max_length=50)
 
 class ApplicationOut(ApplicationCreate, ORMBase):
     id: int
-    created_at: Optional[str]
-    updated_at: Optional[str]
+    applicant_id: int
+    job_id: int
+    job_assessment_id: int | None
+    status: str
 
 class JobAssessmentCreate(BaseModel):
     applicant_id: int
@@ -62,3 +64,19 @@ class JobAssessmentOut(JobAssessmentCreate, ORMBase):
     id: int
     created_at: Optional[str]
     updated_at: Optional[str]
+
+class Score(BaseModel):
+    overall: int
+    skills_match: int
+    experience_depth: int
+    education_match: int
+    potential_fit: int
+
+class AssessmentResult(BaseModel):
+    jobId: int
+    applicantId: int
+    summary: str
+    score: Score
+    assessment_highlights: List[str]
+    recommendations_for_candidate: List[str]
+    createdAt: str
