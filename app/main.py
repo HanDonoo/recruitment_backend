@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import jobs, applicants, companies, job_assessments, applications
+from app.routers import jobs, applicants, companies, job_assessments, applications, interviews
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="RECRUITMENT MVP")
@@ -16,3 +16,4 @@ app.include_router(applicants.router)
 app.include_router(companies.router)
 app.include_router(job_assessments.router)
 app.include_router(applications.router)
+app.include_router(interviews.router)

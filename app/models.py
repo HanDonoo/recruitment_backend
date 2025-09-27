@@ -1,4 +1,4 @@
-from sqlalchemy import Column, BigInteger, Integer, String, Text, DateTime
+from sqlalchemy import Column, BigInteger, Integer, String, Text, DateTime, Enum
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.mysql import JSON as MySQLJSON
 from .db import Base
@@ -73,3 +73,27 @@ class Application(Base):
     status = Column(String(50), nullable=False, default="pending")
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+class Interview(Base):
+    __tablename__ = "interviews"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    application_id = Column(Integer, nullable=False)
+    job_id = Column(Integer, nullable=False)
+    applicant_id = Column(Integer, nullable=False)
+    company_id = Column(Integer, nullable=False)
+
+    interviewer_id = Column(Integer, nullable=True)
+
+    scheduled_time = Column(DateTime, nullable=False)
+    duration_minutes = Column(Integer, nullable=True)
+
+    type = Column(String(50), nullable=False)
+    location_url = Column(String(512), nullable=True)
+
+    status = Column(Enum("Pending", "Confirmed", "Cancelled", "Completed", name="interview_status"), default="Pending")
+
+    notes = Column(Text, nullable=True)
+
+    created_at = Column(DateTime, server_default=func.now())

@@ -98,3 +98,23 @@ class AssessmentResult(BaseModel):
     assessment_highlights: List[str]
     recommendations_for_candidate: List[str]
     createdAt: str
+
+class InterviewCreate(BaseModel):
+    application_id: int
+    job_id: int
+    applicant_id: int
+    company_id: int
+    interviewer_id: Optional[int] = None
+    scheduled_time: datetime
+    duration_minutes: Optional[int] = None
+    type: str
+    location_url: Optional[str] = None
+    status: Optional[str] = "Pending"
+    notes: Optional[str] = None
+
+class InterviewOut(InterviewCreate):
+    id: int
+    created_at: Optional[datetime]
+
+    class Config:
+        from_attributes = True
