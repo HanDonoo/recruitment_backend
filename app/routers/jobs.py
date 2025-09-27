@@ -57,6 +57,25 @@ def list_jobs(
         )
     return stmt.order_by(models.Job.created_at.desc()).limit(limit).all()
 
+@router.get("/by_company", response_model=list[schemas.JobOut])
+def list_jobs_by_company_id(
+        company_id: int = Query(..., description="The ID of the company whose jobs to retrieve."),
+        q: str | None = Query(None),
+        limit: int = 50,
+        db: Session = Depends(get_db),
+):
+
+    stmt = db.query(models.Job).filter(models.Job.company_id == company_id)
+
+    if q:
+        like = f"%{q}%"
+        stmt = stmt.filter(
+            (models.Job.title.like(like))
+            | (models.Job.description.like(like))
+            | (models.Job.skill_tags.like(like))
+        )
+
+    return stmt.order_by(models.Job.created_at.desc()).limit(limit).all()
 @router.get("/list_by_job_ids", response_model=list[schemas.JobOut])
 def list_jobs_by_job_ids(
     job_ids: str = Query(...),

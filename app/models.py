@@ -37,7 +37,10 @@ class Applicant(Base):
     desired_role = Column(String(50), nullable=False)
     desired_location = Column(String(80))
     skill_tags = Column(String(500))
-    created_at = Column(DateTime, server_default=func.now())
+    university = Column(String(100))
+    major = Column(String(100))
+    year = Column(String(10))
+created_at = Column(DateTime, server_default=func.now())
 
 class ApplicationAssessment(Base):
     __tablename__ = "application_assessment"
@@ -66,6 +69,7 @@ class Application(Base):
     applicant_id = Column(BigInteger, nullable=False)
     job_id = Column(BigInteger, nullable=False)
     job_assessment_id = Column(BigInteger, nullable=True)
+    company_id = Column(BigInteger, nullable=True)
     status = Column(String(50), nullable=False, default="pending")
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())

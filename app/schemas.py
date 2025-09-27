@@ -42,7 +42,9 @@ class ApplicantCreate(BaseModel):
     desired_role: str
     desired_location: Optional[str] = None
     skill_tags: Optional[str] = None
-
+    university: Optional[str] = None
+    major: Optional[str] = None
+    year: Optional[str] = None
 
 class ApplicantOut(ApplicantCreate, ORMBase):
     id: int
@@ -58,6 +60,7 @@ class ApplicationOut(ApplicationCreate, ORMBase):
     id: int
     applicant_id: int
     job_id: int
+    company_id: int
     job_assessment_id: int | None
     status: str
 

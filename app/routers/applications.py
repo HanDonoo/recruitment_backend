@@ -61,10 +61,15 @@ def create_application(
 
     job_assessment_id = latest_assessment.id if latest_assessment else None
 
+    job = db.query(models.Job).filter(models.Job.id == application_in.job_id).first()
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found.")
+
     # 3. 创建新的申请
     application = models.Application(
         applicant_id=application_in.applicant_id,
         job_id=application_in.job_id,
+        company_id=job.company_id,
         job_assessment_id=job_assessment_id,
         status="pending"
     )
@@ -89,4 +94,28 @@ def get_single_application(
         )
         .first()
     )
-    return application  # 如果是 None，会自动变成 204 No Content（因为 response_model 是 Optional）
+    return application
+
+@router.get("/by_job_and_company", response_model=list[schemas.ApplicationOut])
+def list_applications_by_job_and_company(
+    job_id: int = Query(..., description="Job ID"),
+    company_id: int = Query(..., description="Company ID"),
+    limit: int = Query(50, ge=1, le=200),
+    offset: int = Query(0, ge=0),
+    db: Session = Depends(get_db),
+):
+    stmt = (
+        db.query(models.Application)
+        .filter(
+            models.Application.job_id == job_id,
+            models.Application.company_id == company_id
+        )
+        .order_by(models.Application.created_at.desc())
+        .offset(offset)
+        .limit(limit)
+    )
+    results = stmt.all()
+    if not results:
+        raise HTTPException(status_code=404, detail="No applications found for this job and company.")
+    return results
+

@@ -39,6 +39,23 @@ def list_applicants(
     )
     return items
 
+@router.get("/by_ids", response_model=list[schemas.ApplicantOut])
+def get_applicants_by_ids(
+        applicant_ids: str = Query(..., description="Comma separated list of applicant IDs"),
+        db: Session = Depends(get_db),
+):
+    try:
+        applicant_ids_list = [int(id) for id in applicant_ids.split(',')]
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid applicant IDs format")
+
+    applicants = db.query(models.Applicant).filter(models.Applicant.id.in_(applicant_ids_list)).all()
+
+    if not applicants:
+        raise HTTPException(status_code=404, detail="No applicants found for the given IDs.")
+
+    return applicants
+
 @router.get("/{applicant_id}", response_model=schemas.ApplicantOut)
 def get_applicant(applicant_id: int, db: Session = Depends(get_db)):
     item = db.get(models.Applicant, applicant_id)
