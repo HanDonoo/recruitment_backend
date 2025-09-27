@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import UploadFile, File, APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from app.db import SessionLocal
@@ -54,6 +56,24 @@ def list_jobs(
             (models.Job.title.like(like)) | (models.Job.description.like(like)) | (models.Job.skill_tags.like(like))
         )
     return stmt.order_by(models.Job.created_at.desc()).limit(limit).all()
+
+@router.get("/list_by_job_ids", response_model=list[schemas.JobOut])
+def list_jobs_by_job_ids(
+    job_ids: str = Query(...),
+    limit: int = 50,
+    db: Session = Depends(get_db)
+):
+    try:
+        job_ids_list = [int(id) for id in job_ids.split(",")]
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid job_ids format. Should be a comma-separated list of integers.")
+
+    jobs = db.query(models.Job).filter(models.Job.id.in_(job_ids_list)).all()
+
+    if not jobs:
+        raise HTTPException(status_code=404, detail="No jobs found with the provided job_ids.")
+
+    return jobs[:limit]
 
 @router.get("/{job_id}", response_model=schemas.JobOut)
 def get_job(job_id: int, db: Session = Depends(get_db)):
