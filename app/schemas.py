@@ -29,11 +29,11 @@ class JobCreate(BaseModel):
     salary: Optional[str] = None
     company_id: Optional[int] = None
     company_name: Optional[str] = None
-
+    status: Optional[str] = "active"
 
 class JobOut(JobCreate, ORMBase):
     id: int
-
+    created_at: Optional[datetime]
 
 class ApplicantCreate(BaseModel):
     name: str

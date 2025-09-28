@@ -25,8 +25,9 @@ class Job(Base):
     skill_tags = Column(String(500))
     salary = Column(String(50))
     created_at = Column(DateTime, server_default=func.now())
-    company_id = Column(BigInteger)          # 逻辑关联，无外键
+    company_id = Column(BigInteger)
     company_name = Column(String(150))
+    status = Column(String(20), default="active")
 
 class Applicant(Base):
     __tablename__ = "applicant"
