@@ -168,29 +168,30 @@ async def assess_cv(
 
     # 发送到 AI 服务
     try:
-        # response = requests.post(AI_API_URL, json=payload, timeout=300)
-        # response.raise_for_status()
-        # data = response.json()
-        data = {
-            "summary": "候选人Mingle Zhang的简历与Generative AI Engineer职位描述有一定匹配，但需要进一步强化相关技能和经验",
-            "score": {
-                "overall": 60,
-                "skills_match": 40,
-                "experience_depth": 30,
-                "education_match": 50,
-                "potential_fit": 80
-            },
-            "assessment_highlights": [
-                "Mingle Zhang在前端开发方面有丰富的经验，熟悉Vue、React和TypeScript等技术栈，具有良好的编码能力和团队合作精神",
-                "Mingle Zhang有志向成为全栈开发者，正在学习C#和.net，展现出强烈的学习意愿和转型潜力",
-                "Mingle Zhang在项目经验方面有一定的基础，但需要进一步强化相关技能和经验，例如机器学习、深度学习和AI框架"
-            ],
-            "recommendations_for_candidate": [
-                "建议Mingle Zhang学习和掌握机器学习和深度学习相关知识，例如TensorFlow、PyTorch和Keras等框架",
-                "建议Mingle Zhang参与一些AI相关的项目或竞赛，例如Kaggle等平台，来丰富自己的经验和技能",
-                "建议Mingle Zhang在面试中强调自己的学习意愿和转型潜力，展示出自己对AI领域的兴趣和热情"
-            ]
-        };
+        response = requests.post(AI_API_URL, json=payload, timeout=300)
+        response.raise_for_status()
+        data = response.json()
+        # mock data
+        # data = {
+        #     "summary": "候选人Mingle Zhang的简历与Generative AI Engineer职位描述有一定匹配，但需要进一步强化相关技能和经验",
+        #     "score": {
+        #         "overall": 60,
+        #         "skills_match": 40,
+        #         "experience_depth": 30,
+        #         "education_match": 50,
+        #         "potential_fit": 80
+        #     },
+        #     "assessment_highlights": [
+        #         "Mingle Zhang在前端开发方面有丰富的经验，熟悉Vue、React和TypeScript等技术栈，具有良好的编码能力和团队合作精神",
+        #         "Mingle Zhang有志向成为全栈开发者，正在学习C#和.net，展现出强烈的学习意愿和转型潜力",
+        #         "Mingle Zhang在项目经验方面有一定的基础，但需要进一步强化相关技能和经验，例如机器学习、深度学习和AI框架"
+        #     ],
+        #     "recommendations_for_candidate": [
+        #         "建议Mingle Zhang学习和掌握机器学习和深度学习相关知识，例如TensorFlow、PyTorch和Keras等框架",
+        #         "建议Mingle Zhang参与一些AI相关的项目或竞赛，例如Kaggle等平台，来丰富自己的经验和技能",
+        #         "建议Mingle Zhang在面试中强调自己的学习意愿和转型潜力，展示出自己对AI领域的兴趣和热情"
+        #     ]
+        # };
 
         version = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
 
@@ -205,7 +206,6 @@ async def assess_cv(
         db.commit()
         db.refresh(new_assessment)
 
-        # return {"success": True, "data": data, "assessment_id": new_assessment.id}
         return {"success": True, "data": data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"AI assessment failed: {e}")

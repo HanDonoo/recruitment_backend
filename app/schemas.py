@@ -1,7 +1,6 @@
-from typing import Optional, Any, Dict, List
 from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict
-
+from typing import List, Optional
 
 class ORMBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -125,16 +124,7 @@ class InterviewOut(InterviewCreate):
     class Config:
         from_attributes = True
 
-
-# 下面这部分保持不变，因为已经正确用 Optional 和类型定义
-
-from pydantic import BaseModel
-from typing import List, Optional
-
-
-# --- 1. 核心统计数据模型 ---
 class OrganizerStatsOut(BaseModel):
-    """用于 /api/organizer/stats 接口的核心统计指标"""
     total_students: int
     total_companies: int
     total_applications: int
@@ -142,30 +132,23 @@ class OrganizerStatsOut(BaseModel):
     placement_rate: float  # 67.5 (百分比，但作为 float)
     active_jobs: int
 
-
-# --- 2. 趋势数据模型 ---
 class ApplicationTrend(BaseModel):
-    """单个时间点（天）的趋势数据"""
     day_label: str  # 例如: "2025-09-16"
     applications: int
     interviews: int
 
 
 class ApplicationTrendsOut(BaseModel):
-    """用于 /api/organizer/trends 接口的趋势数据列表"""
     trends: List[ApplicationTrend]
 
 
-# --- 3. 状态和排行榜模型 ---
 class ApplicationStatusCount(BaseModel):
-    """用于饼图的申请状态统计"""
     status: str
     count: int
 
 
 class CompanyLeaderboardItem(BaseModel):
-    """用于排行榜的单个公司数据"""
     company_name: str
     applications: int
     interviews: int
-    placements: int  # 假设 placements 是 status='accepted' 的数量，是这个吗
+    placements: int
