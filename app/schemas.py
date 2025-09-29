@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, ConfigDict
 class ORMBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
+
 class CompanyCreate(BaseModel):
     name: str
     website: Optional[str] = None
@@ -31,9 +32,11 @@ class JobCreate(BaseModel):
     company_name: Optional[str] = None
     status: Optional[str] = "active"
 
+
 class JobOut(JobCreate, ORMBase):
     id: int
     created_at: Optional[datetime]
+
 
 class ApplicantCreate(BaseModel):
     name: str
@@ -45,6 +48,7 @@ class ApplicantCreate(BaseModel):
     university: Optional[str] = None
     major: Optional[str] = None
     year: Optional[str] = None
+
 
 class ApplicantOut(ApplicantCreate, ORMBase):
     id: int
@@ -61,7 +65,7 @@ class ApplicationOut(ApplicationCreate, ORMBase):
     applicant_id: int
     job_id: int
     company_id: int
-    job_assessment_id: int | None
+    job_assessment_id: Optional[int]  # 改成 Optional[int]
     status: str
 
     created_at: Optional[datetime]
@@ -99,6 +103,7 @@ class AssessmentResult(BaseModel):
     recommendations_for_candidate: List[str]
     createdAt: str
 
+
 class InterviewCreate(BaseModel):
     application_id: int
     job_id: int
@@ -112,6 +117,7 @@ class InterviewCreate(BaseModel):
     status: Optional[str] = "Pending"
     notes: Optional[str] = None
 
+
 class InterviewOut(InterviewCreate):
     id: int
     created_at: Optional[datetime]
@@ -119,8 +125,12 @@ class InterviewOut(InterviewCreate):
     class Config:
         from_attributes = True
 
+
+# 下面这部分保持不变，因为已经正确用 Optional 和类型定义
+
 from pydantic import BaseModel
 from typing import List, Optional
+
 
 # --- 1. 核心统计数据模型 ---
 class OrganizerStatsOut(BaseModel):
@@ -132,6 +142,7 @@ class OrganizerStatsOut(BaseModel):
     placement_rate: float  # 67.5 (百分比，但作为 float)
     active_jobs: int
 
+
 # --- 2. 趋势数据模型 ---
 class ApplicationTrend(BaseModel):
     """单个时间点（天）的趋势数据"""
@@ -139,9 +150,11 @@ class ApplicationTrend(BaseModel):
     applications: int
     interviews: int
 
+
 class ApplicationTrendsOut(BaseModel):
     """用于 /api/organizer/trends 接口的趋势数据列表"""
     trends: List[ApplicationTrend]
+
 
 # --- 3. 状态和排行榜模型 ---
 class ApplicationStatusCount(BaseModel):
@@ -149,9 +162,10 @@ class ApplicationStatusCount(BaseModel):
     status: str
     count: int
 
+
 class CompanyLeaderboardItem(BaseModel):
     """用于排行榜的单个公司数据"""
     company_name: str
     applications: int
     interviews: int
-    placements: int # 假设 placements 是 status='accepted' 的数量
+    placements: int  # 假设 placements 是 status='accepted' 的数量，是这个吗
