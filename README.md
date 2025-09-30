@@ -31,7 +31,7 @@ This is the backend server for the recruitment platform. It handles all business
 
 #### Cloudflare Console
 
-![AI Integration](Cloudflare works.png)
+![Cloudflare Console](Cloudflare works.png)
 
 
 #### llama Prompt
