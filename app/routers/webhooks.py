@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db import SessionLocal
-from .. import models, schemas  # 注意根据你的项目结构调整导入路径
+from .. import schemas  # 注意根据你的项目结构调整导入路径
 import logging
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ def get_db():
         db.close()
 
 
-@router.post("/marketing-comms")
+@router.post("")
 async def receive_marketing_comms(
     payload: schemas.MarketingCommBatchIn,
     db: Session = Depends(get_db),
