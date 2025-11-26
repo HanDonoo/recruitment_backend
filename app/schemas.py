@@ -152,3 +152,23 @@ class CompanyLeaderboardItem(BaseModel):
     applications: int
     interviews: int
     placements: int
+
+# schemas.py
+
+class MarketingCommIn(BaseModel):
+    title: str
+    document_type: Optional[str] = None
+    customer_base: Optional[str] = None
+    customer_type: Optional[str] = None
+    start_date: Optional[str] = None  # 可以先用 str，后面再改成 datetime
+    end_date: Optional[str] = None
+    contact_method: Optional[str] = None
+    target_group: Optional[str] = None
+    product_base: Optional[str] = None
+    detail: Optional[str] = None
+    comms_copy: Optional[str] = None
+
+class MarketingCommBatchIn(BaseModel):
+    """Power Automate 一次 POST 过来一批记录（数组）"""
+    records: List[MarketingCommIn]
+
